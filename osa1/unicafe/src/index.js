@@ -16,23 +16,29 @@ const Statistics = ({statistics}) => {
         )
     } else {
         return (
-            <>
-                <Statistic text="hyvä" value={statistics.good} />
-                <Statistic text="neutraali" value={statistics.neutral} />
-                <Statistic text="huono" value={statistics.bad} />
-                <Statistic text="yhteensä" 
-                    value={statistics.good + statistics.bad + statistics.neutral} />
-                <Statistic text="keskiarvo" 
-                    value={(statistics.good - statistics.bad) / 3} />
-                <Statistic text="positiivisia" 
-                    value={(statistics.good + statistics.neutral + statistics.bad) > 0 ? 
-                        statistics.good / (statistics.good + statistics.neutral + statistics.bad) * 100 + " %" : 0 + " %"} />
-            </>
+            <table>
+                <tbody>
+                    <Statistic text="hyvä" value={statistics.good} />
+                    <Statistic text="neutraali" value={statistics.neutral} />
+                    <Statistic text="huono" value={statistics.bad} />
+                    <Statistic text="yhteensä" 
+                        value={statistics.good + statistics.bad + statistics.neutral} />
+                    <Statistic text="keskiarvo" 
+                        value={(statistics.good - statistics.bad) / 3} />
+                    <Statistic text="positiivisia" 
+                        value={(statistics.good + statistics.neutral + statistics.bad) > 0 ? 
+                            statistics.good / (statistics.good + statistics.neutral + statistics.bad) * 100 + " %" : 0 + " %"} />
+                </tbody>
+            </table>
         )
     }
 }
 
-const Statistic = ({text, value}) => <p>{text} {value}</p>
+const Statistic = ({text, value}) => 
+    <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+    </tr>
 
 const App = () => {
     const [good, setGood] = useState(0)
