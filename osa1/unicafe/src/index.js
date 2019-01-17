@@ -9,15 +9,33 @@ const Button = ({handleClick, text}) =>
             {text}
         </button>
 
-const Statistics = ({good, neutral, bad}) => {
+const Statistics = ({statistics}) => {
     return (
         <>
-            <p>hyvä {good}</p>
-            <p>neutraali {neutral}</p>
-            <p>huono {bad}</p>
+            <Statistic text="hyvä" value={statistics.good} />
+            <Statistic text="neutraali" value={statistics.neutral} />
+            <Statistic text="huono" value={statistics.bad} />
+            <Total statistics={statistics} />
+            <Mean statistics={statistics} />
+            <Positives statistics={statistics} />
         </>
     )
 }
+
+const Statistic = ({text, value}) => <p>{text} {value}</p>
+
+const Total = ({statistics}) => 
+    <Statistic text="yhteensä" 
+        value={statistics.good + statistics.bad + statistics.neutral} />
+
+const Mean = ({statistics}) =>
+    <Statistic text="keskiarvo" 
+        value={(statistics.good - statistics.bad) / 3} />
+
+const Positives = ({statistics}) =>
+    <Statistic text="positiivisia" 
+        value={(statistics.good + statistics.neutral + statistics.bad) > 0 ? 
+            statistics.good / (statistics.good + statistics.neutral + statistics.bad) * 100 + " %" : 0 + " %"} />
 
 const App = () => {
     const [good, setGood] = useState(0)
@@ -31,7 +49,7 @@ const App = () => {
             <Button handleClick={() => setNeutral(neutral + 1)} text="neutraali" />
             <Button handleClick={() => setBad(bad + 1)} text="huono" />
             <Header header="Statistiikka" />
-            <Statistics good={good} neutral={neutral} bad={bad} />
+            <Statistics statistics={{good: good, neutral: neutral, bad: bad}} />
         </div>
     )
 }
