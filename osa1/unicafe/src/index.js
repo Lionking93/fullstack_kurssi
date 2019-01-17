@@ -20,28 +20,19 @@ const Statistics = ({statistics}) => {
                 <Statistic text="hyvä" value={statistics.good} />
                 <Statistic text="neutraali" value={statistics.neutral} />
                 <Statistic text="huono" value={statistics.bad} />
-                <Total statistics={statistics} />
-                <Mean statistics={statistics} />
-                <Positives statistics={statistics} />
+                <Statistic text="yhteensä" 
+                    value={statistics.good + statistics.bad + statistics.neutral} />
+                <Statistic text="keskiarvo" 
+                    value={(statistics.good - statistics.bad) / 3} />
+                <Statistic text="positiivisia" 
+                    value={(statistics.good + statistics.neutral + statistics.bad) > 0 ? 
+                        statistics.good / (statistics.good + statistics.neutral + statistics.bad) * 100 + " %" : 0 + " %"} />
             </>
         )
     }
 }
 
 const Statistic = ({text, value}) => <p>{text} {value}</p>
-
-const Total = ({statistics}) => 
-    <Statistic text="yhteensä" 
-        value={statistics.good + statistics.bad + statistics.neutral} />
-
-const Mean = ({statistics}) =>
-    <Statistic text="keskiarvo" 
-        value={(statistics.good - statistics.bad) / 3} />
-
-const Positives = ({statistics}) =>
-    <Statistic text="positiivisia" 
-        value={(statistics.good + statistics.neutral + statistics.bad) > 0 ? 
-            statistics.good / (statistics.good + statistics.neutral + statistics.bad) * 100 + " %" : 0 + " %"} />
 
 const App = () => {
     const [good, setGood] = useState(0)
