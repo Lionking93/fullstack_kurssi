@@ -10,16 +10,22 @@ const Button = ({handleClick, text}) =>
         </button>
 
 const Statistics = ({statistics}) => {
-    return (
-        <>
-            <Statistic text="hyvä" value={statistics.good} />
-            <Statistic text="neutraali" value={statistics.neutral} />
-            <Statistic text="huono" value={statistics.bad} />
-            <Total statistics={statistics} />
-            <Mean statistics={statistics} />
-            <Positives statistics={statistics} />
-        </>
-    )
+    if ((statistics.good + statistics.neutral + statistics.bad) === 0) {
+        return (
+            <p>Ei yhtään palautetta annettu</p>
+        )
+    } else {
+        return (
+            <>
+                <Statistic text="hyvä" value={statistics.good} />
+                <Statistic text="neutraali" value={statistics.neutral} />
+                <Statistic text="huono" value={statistics.bad} />
+                <Total statistics={statistics} />
+                <Mean statistics={statistics} />
+                <Positives statistics={statistics} />
+            </>
+        )
+    }
 }
 
 const Statistic = ({text, value}) => <p>{text} {value}</p>
