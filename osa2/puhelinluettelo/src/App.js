@@ -8,16 +8,32 @@ const App = () => {
         { 
             name: 'Arto Hellas',
             number: '045-123456'
+        },
+        {
+            name: 'Martti Tienari',
+            number: '040-123456'
+        },
+        {
+            name: 'Arto Järvinen',
+            number: '040-123456'
+        },
+        {
+            name: 'Lea Kutvonen',
+            number: '040-123456'
         }
     ])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
+    const [ newFilter, setNewFilter ] = useState('')
 
     const handleNameChange = (event) =>
         setNewName(event.target.value)
 
     const handleNumberChange = (event) =>
         setNewNumber(event.target.value)
+
+    const handleFilterChange = (event) =>
+        setNewFilter(event.target.value)
 
     const addPerson = (event) => {
         event.preventDefault()
@@ -34,21 +50,31 @@ const App = () => {
         setNewNumber('')
     }
 
-    const showPersons = () => persons.map(person => 
-        <Person key={person.name} person={person} />)
+    
+
+    const personsList = () => persons
+        .filter(person =>
+            person.name.toLowerCase().startsWith(newFilter.toLowerCase()))
+        .map(person => 
+            <Person key={person.name} person={person} />)
 
     return (
         <div>
-            <h2>Puhelinluettelo</h2>
+            <h1>Puhelinluettelo</h1>
+            Rajaa näytettäviä: 
+            <input
+                value={newFilter}
+                onChange={handleFilterChange} /> 
+            <h2>Lisää uusi</h2>
             <form onSubmit={addPerson}>
                 <div>
-                    nimi: 
+                    Nimi: 
                     <input 
                         value={newName}
                         onChange={handleNameChange} />
                 </div>
                 <div>
-                    numero:
+                    Numero:
                     <input
                         value={newNumber}
                         onChange={handleNumberChange} />
@@ -58,7 +84,7 @@ const App = () => {
                 </div>
             </form>
             <h2>Numerot</h2>
-            {showPersons()}
+            {personsList()}
         </div>
     )
 }
