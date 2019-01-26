@@ -16,10 +16,23 @@ const Content = (props) => {
 const Part = ({part}) => 
     <p>{part.name} {part.exercises}</p>
 
+const Total = (props) => {
+    var total = props.parts.reduce((sum, part) => {
+        return sum + part.exercises
+    }, 0)
+
+    return (
+        <p>
+            Yhteensä {total} tehtävää
+        </p>
+    )
+}
+
 const Course = ({course}) => 
     <div>
         <Header course={course.name} />
         <Content parts={course.parts} />
+        <Total parts={course.parts} />
     </div>
 
 const App = () => {    
@@ -39,8 +52,8 @@ const App = () => {
                 exercises: 14
             },
             {
-                name: 'React on hauskaa',
-                exercises: 9
+                name: 'Redux',
+                exercises: 7
             }
         ]
     }
