@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
 
 const Person = ({person}) => 
-    <p>{person.name}</p>
+    <p>{person.name} {person.number}</p>
 
 const App = () => {
     const [ persons, setPersons ] = useState([
-        { name: 'Arto Hellas' }
+        { 
+            name: 'Arto Hellas',
+            number: '045-123456'
+        }
     ])
     const [ newName, setNewName ] = useState('')
+    const [ newNumber, setNewNumber ] = useState('')
 
-    const handlePersonChange = (event) =>
+    const handleNameChange = (event) =>
         setNewName(event.target.value)
+
+    const handleNumberChange = (event) =>
+        setNewNumber(event.target.value)
 
     const addPerson = (event) => {
         event.preventDefault()
         const newPerson = {
-            name: newName
+            name: newName,
+            number: newNumber
         }
 
         persons.findIndex((elem) => elem.name === newName) !== -1 ?
@@ -23,6 +31,7 @@ const App = () => {
             setPersons(persons.concat(newPerson))
 
         setNewName('')
+        setNewNumber('')
     }
 
     const showPersons = () => persons.map(person => 
@@ -36,7 +45,13 @@ const App = () => {
                     nimi: 
                     <input 
                         value={newName}
-                        onChange={handlePersonChange} />
+                        onChange={handleNameChange} />
+                </div>
+                <div>
+                    numero:
+                    <input
+                        value={newNumber}
+                        onChange={handleNumberChange} />
                 </div>
                 <div>
                     <button type="submit">lisää</button>
