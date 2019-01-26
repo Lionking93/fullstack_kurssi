@@ -3,6 +3,51 @@ import React, { useState } from 'react';
 const Person = ({person}) => 
     <p>{person.name} {person.number}</p>
 
+const Filter = ({filterValue, onFilterChange}) => {
+    return (
+        <>
+            Rajaa näytettäviä: 
+            <input
+                value={filterValue}
+                onChange={onFilterChange} /> 
+        </>
+    )
+}
+
+const PersonForm = ({onAddPerson, newNameValue, onChangeNewName, newNumberValue, onChangeNewNumber}) => {
+    return (
+        <form onSubmit={onAddPerson}>
+            <div>
+                Nimi: 
+                <input 
+                    value={newNameValue}
+                    onChange={onChangeNewName} />
+            </div>
+            <div>
+                Numero:
+                <input
+                    value={newNumberValue}
+                    onChange={onChangeNewNumber} />
+            </div>
+            <div>
+                <button type="submit">lisää</button>
+            </div>
+        </form>
+    )
+}
+
+const Persons = ({persons, filterValue}) => {
+    const personsList = () => persons
+        .filter(person =>
+            person.name.toLowerCase().startsWith(filterValue.toLowerCase()))
+        .map(person => 
+            <Person key={person.name} person={person} />)
+
+    return (
+        <>{personsList()}</>
+    )
+}
+
 const App = () => {
     const [ persons, setPersons ] = useState([
         { 
@@ -22,6 +67,7 @@ const App = () => {
             number: '040-123456'
         }
     ])
+
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ newFilter, setNewFilter ] = useState('')
@@ -50,41 +96,19 @@ const App = () => {
         setNewNumber('')
     }
 
-    
-
-    const personsList = () => persons
-        .filter(person =>
-            person.name.toLowerCase().startsWith(newFilter.toLowerCase()))
-        .map(person => 
-            <Person key={person.name} person={person} />)
-
     return (
         <div>
             <h1>Puhelinluettelo</h1>
-            Rajaa näytettäviä: 
-            <input
-                value={newFilter}
-                onChange={handleFilterChange} /> 
+            <Filter filterValue={newFilter} onFilterChange={handleFilterChange} />
             <h2>Lisää uusi</h2>
-            <form onSubmit={addPerson}>
-                <div>
-                    Nimi: 
-                    <input 
-                        value={newName}
-                        onChange={handleNameChange} />
-                </div>
-                <div>
-                    Numero:
-                    <input
-                        value={newNumber}
-                        onChange={handleNumberChange} />
-                </div>
-                <div>
-                    <button type="submit">lisää</button>
-                </div>
-            </form>
+            <PersonForm 
+                onAddPerson={addPerson} 
+                newNameValue={newName}
+                newNumberValue={newNumber}
+                onChangeNewName={handleNameChange}
+                onChangeNewNumber={handleNumberChange} />
             <h2>Numerot</h2>
-            {personsList()}
+            <Persons persons={persons} filterValue={newFilter} />
         </div>
     )
 }
