@@ -18,7 +18,10 @@ const App = () => {
             name: newName
         }
 
-        setPersons(persons.concat(newPerson))
+        persons.findIndex((elem) => elem.name === newName) !== -1 ?
+            alert(`${newName} on jo luettelossa`) :
+            setPersons(persons.concat(newPerson))
+
         setNewName('')
     }
 
