@@ -18,12 +18,16 @@ const Country = ({country}) =>
         <div>population {country.population}</div>
         <h2>languages</h2>
         <Languages languages={country.languages} />
-        <img src={country.flag} height="10%" width="10%" />
+        <img src={country.flag} height="15%" width="15%" />
     </div>
 
-const Countries = ({countries, filter}) => {
+const Countries = ({countries, filter, setFilter}) => {
     const filteredCountries = () => countries
         .filter(country => country.name.toLowerCase().includes(filter.toLowerCase()))
+
+    const handleShowSingleCountry = (singleCountryToShow) => {
+        setFilter(singleCountryToShow)
+    }
 
     const countriesToShow = () => {
         if (filteredCountries().length > 10) {
@@ -31,7 +35,12 @@ const Countries = ({countries, filter}) => {
         } 
         
         if (filteredCountries().length > 1 && filteredCountries.length <= 10) {
-            return filteredCountries().map(country => <p key={country.name}>{country.name}</p>)
+            return filteredCountries()
+                .map(country =>
+                    <p key={country.name}>
+                        {country.name} <button onClick={(e) => handleShowSingleCountry(country.name)}>show</button>
+                    </p>
+                )
         } 
         
         if (filteredCountries().length === 1) {
@@ -52,7 +61,6 @@ const App = () => {
         axios
             .get("https://restcountries.eu/rest/v2/all")
             .then(response => {
-                console.log(response.data);
                 setCountries(response.data)
             })
     }, [])
@@ -63,7 +71,7 @@ const App = () => {
     return (
         <div>
             find countries <input value={filter} onChange={handleFilterChange} />
-            <Countries countries={countries} filter={filter} />
+            <Countries countries={countries} filter={filter} setFilter={setFilter} />
         </div>
     )
 }
