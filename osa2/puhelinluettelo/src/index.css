@@ -1,0 +1,11 @@
+.notification {
+    color: green;
+    background: lightgray;
+    padding: 10px;
+    font-size: 20px;
+    border-color: green;
+    border: 5px solid;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-family: "Comic Sans MS", sans-serif;
+}

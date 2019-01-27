@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import personService from './services/persons';
 
+const Notification = ({message}) => {
+    if (message === null || message === '') {
+        return null
+    }
+
+    return (
+        <div className="notification">
+            {message}
+        </div>
+    )
+}
+
 const Person = ({person, handleDeletePerson}) => {
     return (
         <p>
@@ -42,7 +54,7 @@ const PersonForm = ({onAddPerson, newNameValue, onChangeNewName, newNumberValue,
     )
 }
 
-const Persons = ({persons, filterValue, setPersons}) => {
+const Persons = ({persons, filterValue, setPersons, setNotificationMessage}) => {
     const handleDeletePerson = (person) => {
         const result = window.confirm(`Poistetaanko ${person.name}?`)
         
@@ -51,6 +63,10 @@ const Persons = ({persons, filterValue, setPersons}) => {
                 .deleteOperation(person.id)
                 .then(() => {
                     setPersons(persons.filter(p => p.id !== person.id))
+                    setNotificationMessage(`Poistettiin henkilö ${person.name}`)
+                    setTimeout(() => {
+                        setNotificationMessage(null)
+                    }, 5000)
                 })
     }
 
@@ -81,6 +97,7 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ newFilter, setNewFilter ] = useState('')
+    const [ notificationMessage, setNotificationMessage ] = useState('')
 
     const handleNameChange = (event) =>
         setNewName(event.target.value)
@@ -104,11 +121,23 @@ const App = () => {
             if (confirmUpdate)
                 personService
                     .update(foundPerson.id, newPerson)
-                    .then(updatedPerson => setPersons(persons.map(person => 
-                        person.id !== updatedPerson.id ? person : updatedPerson)))
+                    .then(updatedPerson => {
+                        setPersons(persons.map(person => 
+                            person.id !== updatedPerson.id ? person : updatedPerson))
+                        setNotificationMessage(`Muutettiin henkilön ${updatedPerson.name} numeroa`)
+                        setTimeout(() => {
+                            setNotificationMessage(null)
+                        }, 5000)
+                    })
         } else {
             personService.create(newPerson)
-                .then(addedPerson => setPersons(persons.concat(addedPerson)))
+                .then(addedPerson => {
+                    setPersons(persons.concat(addedPerson))
+                    setNotificationMessage(`Lisättiin ${addedPerson.name}`)
+                    setTimeout(() => {
+                        setNotificationMessage(null)
+                    }, 5000)
+                })
         }
 
         setNewName('')
@@ -118,6 +147,7 @@ const App = () => {
     return (
         <div>
             <h1>Puhelinluettelo</h1>
+            <Notification message={notificationMessage} />
             <Filter filterValue={newFilter} onFilterChange={handleFilterChange} />
             <h2>Lisää uusi</h2>
             <PersonForm 
@@ -127,7 +157,11 @@ const App = () => {
                 onChangeNewName={handleNameChange}
                 onChangeNewNumber={handleNumberChange} />
             <h2>Numerot</h2>
-            <Persons persons={persons} filterValue={newFilter} setPersons={setPersons} />
+            <Persons 
+                persons={persons} 
+                filterValue={newFilter} 
+                setPersons={setPersons}
+                setNotificationMessage={setNotificationMessage} />
         </div>
     )
 }
