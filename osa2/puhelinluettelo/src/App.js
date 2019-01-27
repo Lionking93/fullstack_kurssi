@@ -80,9 +80,11 @@ const App = () => {
             number: newNumber
         }
 
-        persons.findIndex((elem) => elem.name === newName) !== -1 ?
-            alert(`${newName} on jo luettelossa`) :
-            setPersons(persons.concat(newPerson))
+        persons.findIndex((elem) => elem.name === newName) !== -1 
+            ? alert(`${newName} on jo luettelossa`) 
+            : axios.post("http://localhost:3001/persons", newPerson)
+                .then(response =>
+                    setPersons(persons.concat(response.data)))
 
         setNewName('')
         setNewNumber('')
