@@ -9,3 +9,15 @@
     margin-bottom: 20px;
     font-family: "Comic Sans MS", sans-serif;
 }
+
+.error {
+    color: red;
+    background: lightgray;
+    padding: 10px;
+    font-size: 20px;
+    border-color: red;
+    border: 5px solid;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-family: "Comic Sans MS", sans-serif;
+}

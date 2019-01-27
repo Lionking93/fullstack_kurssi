@@ -1,24 +1,14 @@
 {
   "persons": [
     {
-      "name": "Martti Tienari",
-      "number": "010-231252",
-      "id": 8
+      "name": "Hilpertti",
+      "number": "021002",
+      "id": 2
     },
     {
-      "name": "Testi Tyyppi",
-      "number": "02004444",
-      "id": 9
-    },
-    {
-      "name": "Jaska Jokunen",
-      "number": "1100333",
-      "id": 10
-    },
-    {
-      "name": "Rändöm heebo",
-      "number": "112",
-      "id": 12
+      "name": "Testi",
+      "number": "001234",
+      "id": 4
     }
   ]
 }
