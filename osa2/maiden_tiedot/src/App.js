@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Languages = ({languages}) => {
-    const languagesToShow = () => languages.map(lang => <li key={lang.iso639_1}>{lang.name}</li>)
+    const languagesToShow = () => 
+        languages.map(lang => <li key={lang.iso639_1}>{lang.name}</li>)
 
     return (
         <ul>
@@ -11,17 +12,62 @@ const Languages = ({languages}) => {
     )
 }
 
-const Country = ({country}) => 
-    <div>
-        <h1>{country.name}</h1>
-        <div>capital {country.capital}</div>
-        <div>population {country.population}</div>
-        <h2>languages</h2>
-        <Languages languages={country.languages} />
-        <img src={country.flag} height="15%" width="15%" />
-    </div>
+const Weather = ({weather}) => {
+    const weatherToShow = () => {
+        if (Object.entries(weather).length > 0) {
+            return (
+                <>
+                    <p>
+                        <b>temperature: </b>
+                        {weather.current.temp_c} Celsius
+                    </p>
+                    <img src={weather.current.condition.icon} alt="Current weather condition" />
+                    <p>
+                        <b>wind: </b>
+                        {weather.current.wind_kph} kph direction {weather.current.wind_dir}
+                    </p>
+                </>
+            )
+        } else {
+            return ''
+        }
+    }
 
-const Countries = ({countries, filter, setFilter}) => {
+    return (
+        <>
+            {weatherToShow()}
+        </>
+    )
+}
+
+const Country = ({country, weather, setWeather}) => {
+    useEffect(() => {
+        const apiKey = "INSERT_API_KEY_HERE"
+        const query = `http://api.apixu.com/v1/current.json?key=${apiKey}&q=${country.capital}`
+        axios
+            .get(query)
+            .then(response => {
+                setWeather(response.data)
+            })
+    }, country)
+
+    const flagOfCountry = `Flag of ${country}`
+
+    return (
+        <div>
+            <h1>{country.name}</h1>
+            <div>capital {country.capital}</div>
+            <div>population {country.population}</div>
+            <h2>languages</h2>
+            <Languages languages={country.languages} />
+            <img src={country.flag} height="15%" width="15%" alt={flagOfCountry} />
+            <h2>Weather in {country.capital}</h2>
+            <Weather weather={weather} />
+        </div>
+    )
+}
+
+const Countries = ({countries, filter, setFilter, weather, setWeather}) => {
     const filteredCountries = () => countries
         .filter(country => country.name.toLowerCase().includes(filter.toLowerCase()))
 
@@ -44,7 +90,10 @@ const Countries = ({countries, filter, setFilter}) => {
         } 
         
         if (filteredCountries().length === 1) {
-            return <Country country={filteredCountries()[0]} />
+            return <Country 
+                        country={filteredCountries()[0]} 
+                        weather={weather}
+                        setWeather={setWeather} />
         }
     }
 
@@ -53,9 +102,13 @@ const Countries = ({countries, filter, setFilter}) => {
     )
 }
 
+const Filter = ({filter, handleFilterChange}) =>
+    <input value={filter} onChange={handleFilterChange} />
+
 const App = () => {
     const [ filter, setFilter ] = useState('')
     const [ countries, setCountries ] = useState([])
+    const [ weather, setWeather ] = useState({})
 
     useEffect(() => {
         axios
@@ -70,8 +123,13 @@ const App = () => {
 
     return (
         <div>
-            find countries <input value={filter} onChange={handleFilterChange} />
-            <Countries countries={countries} filter={filter} setFilter={setFilter} />
+            find countries <Filter filter={filter} handleFilterChange={handleFilterChange} />
+            <Countries 
+                countries={countries} 
+                filter={filter} 
+                setFilter={setFilter}
+                weather={weather}
+                setWeather={setWeather} />
         </div>
     )
 }
