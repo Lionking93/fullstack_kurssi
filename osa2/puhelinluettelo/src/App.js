@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import personService from './services/persons';
 
 const Person = ({person}) => 
     <p>{person.name} {person.number}</p>
@@ -53,11 +53,9 @@ const App = () => {
     const [ persons, setPersons ] = useState([])
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3001/persons")
-            .then(response => {
-                setPersons(response.data)
-            })
+        personService
+            .getAll()
+            .then(initialPersons => setPersons(initialPersons))
     }, [])
 
     const [ newName, setNewName ] = useState('')
@@ -82,9 +80,8 @@ const App = () => {
 
         persons.findIndex((elem) => elem.name === newName) !== -1 
             ? alert(`${newName} on jo luettelossa`) 
-            : axios.post("http://localhost:3001/persons", newPerson)
-                .then(response =>
-                    setPersons(persons.concat(response.data)))
+            : personService.create(newPerson)
+                .then(addedPerson => setPersons(persons.concat(addedPerson)))
 
         setNewName('')
         setNewNumber('')
