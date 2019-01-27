@@ -98,10 +98,18 @@ const App = () => {
             number: newNumber
         }
 
-        persons.findIndex((elem) => elem.name === newName) !== -1 
-            ? alert(`${newName} on jo luettelossa`) 
-            : personService.create(newPerson)
+        const foundPerson = persons.find((elem) => elem.name === newName)
+        if (foundPerson !== undefined) {
+            const confirmUpdate = window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)
+            if (confirmUpdate)
+                personService
+                    .update(foundPerson.id, newPerson)
+                    .then(updatedPerson => setPersons(persons.map(person => 
+                        person.id !== updatedPerson.id ? person : updatedPerson)))
+        } else {
+            personService.create(newPerson)
                 .then(addedPerson => setPersons(persons.concat(addedPerson)))
+        }
 
         setNewName('')
         setNewNumber('')

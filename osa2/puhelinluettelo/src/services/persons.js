@@ -18,4 +18,10 @@ const deleteOperation = id => {
         .delete(`${baseUrl}/${id}`)
 }
 
-export default { getAll, create, deleteOperation }
+const update = (id, newObject) => {
+    return axios
+        .put(`${baseUrl}/${id}`, newObject)
+        .then(response => response.data)   
+}
+
+export default { getAll, create, deleteOperation, update }
