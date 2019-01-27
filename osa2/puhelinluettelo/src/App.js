@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import personService from './services/persons';
 
-const Person = ({person}) => 
-    <p>{person.name} {person.number}</p>
+const Person = ({person, handleDeletePerson}) => {
+    return (
+        <p>
+            {person.name} {person.number} <button onClick={handleDeletePerson}>poista</button>
+        </p>
+    )
+}
 
 const Filter = ({filterValue, onFilterChange}) => {
     return (
@@ -37,12 +42,27 @@ const PersonForm = ({onAddPerson, newNameValue, onChangeNewName, newNumberValue,
     )
 }
 
-const Persons = ({persons, filterValue}) => {
+const Persons = ({persons, filterValue, setPersons}) => {
+    const handleDeletePerson = (person) => {
+        const result = window.confirm(`Poistetaanko ${person.name}?`)
+        
+        if (result)
+            personService
+                .deleteOperation(person.id)
+                .then(() => {
+                    setPersons(persons.filter(p => p.id !== person.id))
+                })
+    }
+
     const personsList = () => persons
         .filter(person =>
             person.name.toLowerCase().startsWith(filterValue.toLowerCase()))
         .map(person => 
-            <Person key={person.name} person={person} />)
+            <Person 
+                key={person.name} 
+                person={person} 
+                handleDeletePerson={() => 
+                    handleDeletePerson(person)} />)
 
     return (
         <>{personsList()}</>
@@ -99,7 +119,7 @@ const App = () => {
                 onChangeNewName={handleNameChange}
                 onChangeNewNumber={handleNumberChange} />
             <h2>Numerot</h2>
-            <Persons persons={persons} filterValue={newFilter} />
+            <Persons persons={persons} filterValue={newFilter} setPersons={setPersons} />
         </div>
     )
 }
