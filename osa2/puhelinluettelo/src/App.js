@@ -98,6 +98,9 @@ const App = () => {
                     setPersons(persons.concat(addedPerson))
                     showNotification(`Lisättiin ${addedPerson.name}`)
                 })
+                .catch(error => {
+                    showError(error.response.data.error)
+                })
         }
 
         setNewName('')
